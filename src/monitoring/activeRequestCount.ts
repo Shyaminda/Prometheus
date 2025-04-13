@@ -19,7 +19,7 @@ export const requestGaugeMiddleware = (req: Request, res: Response, next: NextFu
                 method: req.method,
                 route: req.route?.path || req.path,
             })
-        }, 10000); // Wait for 10 seconds to get the active user count
+        }, 10000); // Wait for 10 seconds to decrement the active user count
     });
     next();
 };
