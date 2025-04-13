@@ -1,10 +1,14 @@
 import express from "express";
 import express_prom_bundle from "express-prom-bundle";
+import { requestCountMiddleware } from "./monitoring/requestCount";
+import client from "prom-client";
 
 const app = express();
 
-const metricsMiddleware = express_prom_bundle({includeMethod: true});
-app.use(metricsMiddleware);
+app.use(requestCountMiddleware)
+
+// const metricsMiddleware = express_prom_bundle({includeMethod: true});
+// app.use(metricsMiddleware);
 
 app.use(express.json());
 
@@ -47,6 +51,11 @@ app.post("/product", (req, res) => {
     });
 });
 
+app.get("/metrics", async (req, res) => {  // This is the endpoint for Prometheus to scrape metrics
+    const metrics = await client.register.metrics();
+    res.set('Content-Type', client.register.contentType);
+    res.end(metrics);
+})
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
