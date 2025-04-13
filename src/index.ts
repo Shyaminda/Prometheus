@@ -2,10 +2,12 @@ import express from "express";
 import express_prom_bundle from "express-prom-bundle";
 import { requestCountMiddleware } from "./monitoring/requestCount";
 import client from "prom-client";
+import { requestGaugeMiddleware } from "./monitoring/activeRequestCount";
 
 const app = express();
 
 app.use(requestCountMiddleware)
+app.use(requestGaugeMiddleware)
 
 // const metricsMiddleware = express_prom_bundle({includeMethod: true});
 // app.use(metricsMiddleware);
